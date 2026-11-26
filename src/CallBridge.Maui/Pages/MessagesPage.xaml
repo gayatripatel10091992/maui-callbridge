@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:core="clr-namespace:CallBridge.Core;assembly=CallBridge.Core"
+             xmlns:vm="clr-namespace:CallBridge.Core.ViewModels;assembly=CallBridge.Core"
+             x:Class="CallBridge.Maui.Pages.MessagesPage"
+             x:DataType="vm:MessagesViewModel"
+             Shell.NavBarIsVisible="False"
+             Title="Messages">
+
+    <Grid RowDefinitions="Auto,*" Padding="16,12,16,0" RowSpacing="10">
+        <Label Grid.Row="0" Text="Messages" Style="{StaticResource Title}" />
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Threads}" SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:ThreadRowUi">
+                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" Padding="0,10">
+                        <Border Grid.Column="0" Style="{StaticResource Avatar}">
+                            <Label Text="{Binding Initials}" Style="{StaticResource AvatarText}" />
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center">
+                            <Label Text="{Binding Title}" Style="{StaticResource Primary}" LineBreakMode="TailTruncation">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding HasUnread}" Value="True">
+                                        <Setter Property="FontAttributes" Value="Bold" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Label Text="{Binding PreviewText}" Style="{StaticResource Secondary}" LineBreakMode="TailTruncation" />
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="●" FontSize="10" TextColor="{Binding LineColor, Converter={StaticResource HexColor}}" />
+                                <Label Text="{Binding LineLabel}" FontSize="11" Style="{StaticResource Secondary}" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2" Spacing="6" VerticalOptions="Center">
+                            <Label Text="{Binding TimeLabel}" Style="{StaticResource Secondary}" HorizontalOptions="End" />
+                            <Border IsVisible="{Binding HasUnread}" StrokeThickness="0" Padding="7,1" HorizontalOptions="End"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="10" />
+                                </Border.StrokeShape>
+                                <Label Text="{Binding Unread}" FontSize="11" FontAttributes="Bold"
+                                       TextColor="{AppThemeBinding Light=White, Dark=#003064}" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

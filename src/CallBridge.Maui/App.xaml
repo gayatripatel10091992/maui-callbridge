@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:CallBridge.Maui"
+             x:Class="CallBridge.Maui.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <local:HexColorConverter x:Key="HexColor" />
+            <Color x:Key="Primary">#1F5EAD</Color>
+            <Color x:Key="PrimaryDark">#A7C8FF</Color>
+            <Color x:Key="CallGreen">#1E8E3E</Color>
+            <Color x:Key="CallRed">#D93025</Color>
+
+            <Style x:Key="Title" TargetType="Label">
+                <Setter Property="FontSize" Value="28" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{AppThemeBinding Light=#111827, Dark=#F3F4F6}" />
+            </Style>
+
+            <Style x:Key="Primary" TargetType="Label">
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="TextColor" Value="{AppThemeBinding Light=#111827, Dark=#F3F4F6}" />
+            </Style>
+
+            <Style x:Key="Secondary" TargetType="Label">
+                <Setter Property="FontSize" Value="13" />
+                <Setter Property="TextColor" Value="{AppThemeBinding Light=#5F6368, Dark=#9AA0A6}" />
+            </Style>
+
+            <Style x:Key="Section" TargetType="Label">
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Margin" Value="0,18,0,4" />
+                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+            </Style>
+
+            <Style x:Key="Avatar" TargetType="Border">
+                <Setter Property="WidthRequest" Value="42" />
+                <Setter Property="HeightRequest" Value="42" />
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#D5E3FF, Dark=#00468C}" />
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="21" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="AvatarText" TargetType="Label">
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark=#D5E3FF}" />
+            </Style>
+
+            <Style x:Key="Card" TargetType="Border">
+                <Setter Property="StrokeThickness" Value="0" />
+                <Setter Property="Padding" Value="16" />
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#F1F3FA, Dark=#181C22}" />
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="18" />
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="Chip" TargetType="Button">
+                <Setter Property="CornerRadius" Value="18" />
+                <Setter Property="HeightRequest" Value="38" />
+                <Setter Property="Padding" Value="18,0" />
+                <Setter Property="FontSize" Value="14" />
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#EBEEF5, Dark=#1C2026}" />
+                <Setter Property="TextColor" Value="{AppThemeBinding Light=#374151, Dark=#D1D5DB}" />
+            </Style>
+
+            <Style x:Key="Filled" TargetType="Button">
+                <Setter Property="CornerRadius" Value="24" />
+                <Setter Property="HeightRequest" Value="48" />
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                <Setter Property="TextColor" Value="{AppThemeBinding Light=White, Dark=#003064}" />
+            </Style>
+
+            <Style TargetType="Page" ApplyToDerivedTypes="True">
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light=#F8F9FF, Dark=#10131A}" />
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

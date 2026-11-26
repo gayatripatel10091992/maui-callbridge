@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:pages="clr-namespace:CallBridge.Maui.Pages"
+       x:Class="CallBridge.Maui.AppShell"
+       Shell.TabBarBackgroundColor="{AppThemeBinding Light=#EBEEF5, Dark=#1C2026}"
+       Shell.TabBarTitleColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+       Shell.TabBarUnselectedColor="{AppThemeBinding Light=#5F6368, Dark=#9AA0A6}"
+       Shell.TabBarForegroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+       Shell.BackgroundColor="{AppThemeBinding Light=#F8F9FF, Dark=#10131A}"
+       Shell.ForegroundColor="{AppThemeBinding Light=#111827, Dark=#F3F4F6}"
+       Shell.TitleColor="{AppThemeBinding Light=#111827, Dark=#F3F4F6}">
+
+    <TabBar>
+        <ShellContent Title="Calls" Icon="tab_calls.png" Route="calls" ContentTemplate="{DataTemplate pages:RecentsPage}" />
+        <ShellContent Title="Messages" Icon="tab_messages.png" Route="messages" ContentTemplate="{DataTemplate pages:MessagesPage}" />
+        <ShellContent Title="Voicemail" Icon="tab_voicemail.png" Route="voicemail" ContentTemplate="{DataTemplate pages:VoicemailPage}" />
+        <ShellContent Title="Settings" Icon="tab_settings.png" Route="settings" ContentTemplate="{DataTemplate pages:SettingsPage}" />
+    </TabBar>
+</Shell>

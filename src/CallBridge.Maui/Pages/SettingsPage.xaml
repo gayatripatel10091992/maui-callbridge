@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:core="clr-namespace:CallBridge.Core;assembly=CallBridge.Core"
+             xmlns:vm="clr-namespace:CallBridge.Core.ViewModels;assembly=CallBridge.Core"
+             x:Class="CallBridge.Maui.Pages.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Shell.NavBarIsVisible="False"
+             Title="Settings">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,12,16,24" Spacing="6">
+            <Label Text="Settings" Style="{StaticResource Title}" />
+
+            <Border Style="{StaticResource Card}" Margin="0,8,0,0"
+                    BackgroundColor="{AppThemeBinding Light=#D5E3FF, Dark=#00468C}">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                    <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
+                        <Label Text="Your plan" FontSize="12" TextColor="{AppThemeBinding Light=#001B3E, Dark=#D5E3FF}" />
+                        <Label Text="{Binding PlanLabel}" FontSize="16" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#001B3E, Dark=#D5E3FF}" />
+                    </VerticalStackLayout>
+                    <Button Grid.Column="1" Text="Plans" Clicked="OnPlansClicked" Style="{StaticResource Filled}" Padding="20,0" />
+                </Grid>
+            </Border>
+
+            <Label Text="Your numbers" Style="{StaticResource Section}" />
+            <CollectionView ItemsSource="{Binding NumberRows}" SelectionMode="None" HeightRequest="80">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                        <Label Text="{Binding .}" Style="{StaticResource Primary}" Padding="0,8" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label Text="Calling" Style="{StaticResource Section}" />
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout>
+                    <Label Text="Prefer Wi-Fi calling" Style="{StaticResource Primary}" />
+                    <Label Text="Hands calls over to mobile data when Wi-Fi drops" Style="{StaticResource Secondary}" />
+                </VerticalStackLayout>
+                <Switch Grid.Column="1" IsToggled="{Binding WifiCallingPreferred}" />
+            </Grid>
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout>
+                    <Label Text="Record calls" Style="{StaticResource Primary}" />
+                    <Label Text="Both sides hear an announcement first" Style="{StaticResource Secondary}" />
+                </VerticalStackLayout>
+                <Switch Grid.Column="1" IsToggled="{Binding RecordCalls}" />
+            </Grid>
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout>
+                    <Label Text="Forward calls" Style="{StaticResource Primary}" />
+                    <Label Text="{Binding ForwardingText}" Style="{StaticResource Secondary}" />
+                </VerticalStackLayout>
+                <Switch Grid.Column="1" IsToggled="{Binding ForwardingEnabled}" />
+            </Grid>
+
+            <Label Text="Spam &amp; blocking" Style="{StaticResource Section}" />
+            <Grid ColumnDefinitions="*,Auto">
+                <VerticalStackLayout>
+                    <Label Text="Screen unknown callers" Style="{StaticResource Primary}" />
+                    <Label Text="Send numbers that aren't in your contacts to voicemail" Style="{StaticResource Secondary}" />
+                </VerticalStackLayout>
+                <Switch Grid.Column="1" IsToggled="{Binding ScreenUnknownCallers}" />
+            </Grid>
+            <Label Text="Spam sensitivity" Style="{StaticResource Primary}" Margin="0,8,0,0" />
+            <Label Text="{Binding SpamText}" Style="{StaticResource Secondary}" />
+            <Label Text="Blocked numbers" Style="{StaticResource Primary}" Margin="0,8,0,0" />
+            <Label Text="{Binding BlockedText}" Style="{StaticResource Secondary}" />
+
+            <Label x:Name="PlatformLabel" Style="{StaticResource Secondary}" Margin="0,24,0,0" HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

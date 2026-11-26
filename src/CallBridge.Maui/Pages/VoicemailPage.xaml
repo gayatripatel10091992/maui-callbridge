@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:core="clr-namespace:CallBridge.Core;assembly=CallBridge.Core"
+             xmlns:vm="clr-namespace:CallBridge.Core.ViewModels;assembly=CallBridge.Core"
+             x:Class="CallBridge.Maui.Pages.VoicemailPage"
+             x:DataType="vm:VoicemailViewModel"
+             Shell.NavBarIsVisible="False"
+             Title="Voicemail">
+
+    <Grid RowDefinitions="Auto,*" Padding="16,12,16,0" RowSpacing="10">
+        <Label Grid.Row="0" Text="Voicemail" Style="{StaticResource Title}" />
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Voicemails}" SelectionMode="None"
+                        Footer="New messages are transcribed on the Pro plan.">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="vm:VoicemailRowUi">
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                        <VerticalStackLayout Spacing="10">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Border Grid.Column="0" Style="{StaticResource Avatar}">
+                                    <Label Text="{Binding Initials}" Style="{StaticResource AvatarText}" />
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                    <Label Text="{Binding Title}" Style="{StaticResource Primary}">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding IsNew}" Value="True">
+                                                <Setter Property="FontAttributes" Value="Bold" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                    <Label Text="{Binding Meta}" Style="{StaticResource Secondary}" />
+                                </VerticalStackLayout>
+                                <Label Grid.Column="2" Text="{Binding LineLabel}" Style="{StaticResource Secondary}" VerticalOptions="Center" />
+                            </Grid>
+                            <Label Text="{Binding Transcript}" Style="{StaticResource Primary}" FontSize="15">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding HasTranscript}" Value="False">
+                                        <Setter Property="FontAttributes" Value="Italic" />
+                                        <Setter Property="TextColor" Value="#9AA0A6" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                <Button Grid.Column="0" Text="▶" Clicked="OnPlayClicked" Style="{StaticResource Chip}" WidthRequest="48" Padding="0" />
+                                <ProgressBar Grid.Column="1" Progress="0" VerticalOptions="Center"
+                                             ProgressColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                <Button Grid.Column="2" Text="Call back" Clicked="OnCallBackClicked" Style="{StaticResource Chip}" />
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

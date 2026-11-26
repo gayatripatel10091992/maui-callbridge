@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:core="clr-namespace:CallBridge.Core;assembly=CallBridge.Core"
+             xmlns:vm="clr-namespace:CallBridge.Core.ViewModels;assembly=CallBridge.Core"
+             x:Class="CallBridge.Maui.Pages.InCallPage"
+             x:DataType="vm:InCallViewModel"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
+             Title="Call">
+
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#0B2A55" Offset="0" />
+            <GradientStop Color="#050E1C" Offset="1" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto,Auto,Auto" Padding="24,48,24,32" RowSpacing="10">
+        <Border Grid.Row="0" HorizontalOptions="Center" StrokeThickness="0" Padding="14,6" BackgroundColor="#1FFFFFFF">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="16" />
+            </Border.StrokeShape>
+            <Label Text="{Binding Ui.NetworkLabel}" TextColor="White" FontSize="13" />
+        </Border>
+        <Border Grid.Row="1" WidthRequest="104" HeightRequest="104" StrokeThickness="0" BackgroundColor="#33A7C8FF" Margin="0,20,0,0"
+                HorizontalOptions="Center">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="52" />
+            </Border.StrokeShape>
+            <Label x:Name="Initials" TextColor="White" FontSize="38" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center" />
+        </Border>
+        <Label Grid.Row="2" Text="{Binding Ui.Title}" TextColor="White" FontSize="30" HorizontalOptions="Center" />
+        <Label Grid.Row="3" Text="{Binding Ui.Subtitle}" TextColor="#B3FFFFFF" FontSize="16" HorizontalOptions="Center" />
+        <Label Grid.Row="4" Text="{Binding Ui.Status}" TextColor="White" FontSize="18" HorizontalOptions="Center" />
+
+        <Grid Grid.Row="6" ColumnDefinitions="*,*,*" ColumnSpacing="16">
+            <Button Grid.Column="0" Text="🎤&#10;Mute" Command="{Binding ToggleMuteCommand}" IsEnabled="{Binding Ui.CanControl}"
+                    Style="{StaticResource Chip}" HeightRequest="76" CornerRadius="38" BackgroundColor="#24FFFFFF" TextColor="White">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding Ui.Muted}" Value="True">
+                        <Setter Property="BackgroundColor" Value="White" />
+                        <Setter Property="TextColor" Value="#0B2A55" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Column="1" Text="🔊&#10;Speaker" Command="{Binding ToggleSpeakerCommand}" IsEnabled="{Binding Ui.CanControl}"
+                    Style="{StaticResource Chip}" HeightRequest="76" CornerRadius="38" BackgroundColor="#24FFFFFF" TextColor="White">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding Ui.Speaker}" Value="True">
+                        <Setter Property="BackgroundColor" Value="White" />
+                        <Setter Property="TextColor" Value="#0B2A55" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Grid.Column="2" Text="⏸&#10;Hold" Command="{Binding ToggleHoldCommand}" IsEnabled="{Binding Ui.CanControl}"
+                    Style="{StaticResource Chip}" HeightRequest="76" CornerRadius="38" BackgroundColor="#24FFFFFF" TextColor="White">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding Ui.OnHold}" Value="True">
+                        <Setter Property="BackgroundColor" Value="White" />
+                        <Setter Property="TextColor" Value="#0B2A55" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+        </Grid>
+        <Button Grid.Row="8" Text="End call" Command="{Binding HangUpCommand}" Margin="0,24,0,0"
+                BackgroundColor="{StaticResource CallRed}" TextColor="White" HeightRequest="64" CornerRadius="32" FontSize="18" />
+    </Grid>
+</ContentPage>

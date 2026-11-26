@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CallBridge.Core/CallBridge.Core.csproj" />
+    <Project Path="src/CallBridge.Maui/CallBridge.Maui.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CallBridge.Core.Tests/CallBridge.Core.Tests.csproj" />
+  </Folder>
+</Solution>

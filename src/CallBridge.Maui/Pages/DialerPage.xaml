@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:core="clr-namespace:CallBridge.Core;assembly=CallBridge.Core"
+             xmlns:vm="clr-namespace:CallBridge.Core.ViewModels;assembly=CallBridge.Core"
+             x:Class="CallBridge.Maui.Pages.DialerPage"
+             x:DataType="vm:DialerViewModel"
+             Title="Keypad">
+
+    <Grid RowDefinitions="Auto,*,Auto,Auto,Auto,Auto" Padding="24,8,24,24" RowSpacing="12">
+        <Button Grid.Row="0" Text="{Binding LineLabel, StringFormat='Calling from {0}  ⇄'}" Command="{Binding SwitchLineCommand}"
+                Style="{StaticResource Chip}" HorizontalOptions="Center" />
+        <Label Grid.Row="2" Text="{Binding Formatted}" FontSize="34" HorizontalTextAlignment="Center"
+               TextColor="{AppThemeBinding Light=#111827, Dark=#F3F4F6}" LineBreakMode="HeadTruncation" />
+        <Button Grid.Row="3" Text="{Binding SuggestionText}" IsVisible="{Binding HasSuggestion}" Command="{Binding CallSuggestionCommand}"
+                Style="{StaticResource Chip}" HorizontalOptions="Center" />
+        <Grid x:Name="Keys" Grid.Row="4" ColumnDefinitions="*,*,*" RowDefinitions="76,76,76,76" ColumnSpacing="16" RowSpacing="12" />
+        <Grid Grid.Row="5" ColumnDefinitions="*,Auto,*">
+            <Button Grid.Column="1" Text="📞" FontSize="28" Command="{Binding CallCommand}" WidthRequest="76" HeightRequest="76"
+                    CornerRadius="38" BackgroundColor="{StaticResource CallGreen}" TextColor="White" Padding="0" />
+            <Button Grid.Column="2" Text="⌫" FontSize="24" Command="{Binding BackspaceCommand}" BackgroundColor="Transparent"
+                    TextColor="{AppThemeBinding Light=#5F6368, Dark=#9AA0A6}" HorizontalOptions="Center" />
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:core="clr-namespace:CallBridge.Core;assembly=CallBridge.Core"
+             xmlns:vm="clr-namespace:CallBridge.Core.ViewModels;assembly=CallBridge.Core"
+             x:Class="CallBridge.Maui.Pages.RecentsPage"
+             x:DataType="vm:RecentsViewModel"
+             Shell.NavBarIsVisible="False"
+             Title="Calls">
+
+    <Grid RowDefinitions="Auto,Auto,*" Padding="16,12,16,0" RowSpacing="10">
+        <VerticalStackLayout Grid.Row="0" Spacing="2">
+            <Label Text="Calls" Style="{StaticResource Title}" />
+            <Label Text="{Binding LineLabel}" Style="{StaticResource Secondary}" />
+        </VerticalStackLayout>
+
+        <HorizontalStackLayout Grid.Row="1" Spacing="8">
+            <Button Text="All" Style="{StaticResource Chip}" Command="{Binding SetFilterCommand}" CommandParameter="All">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding IsAllSelected}" Value="True">
+                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                        <Setter Property="TextColor" Value="{AppThemeBinding Light=White, Dark=#003064}" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+            <Button Text="Missed" Style="{StaticResource Chip}" Command="{Binding SetFilterCommand}" CommandParameter="Missed">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding IsMissedSelected}" Value="True">
+                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                        <Setter Property="TextColor" Value="{AppThemeBinding Light=White, Dark=#003064}" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+        </HorizontalStackLayout>
+
+        <CollectionView Grid.Row="2" ItemsSource="{Binding Rows}" SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="core:CallRowUi">
+                    <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="12" Padding="0,8">
+                        <Border Grid.Column="0" Style="{StaticResource Avatar}">
+                            <Label Text="{Binding Initials}" Style="{StaticResource AvatarText}" />
+                        </Border>
+                        <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
+                            <Label Text="{Binding DisplayTitle}" Style="{StaticResource Primary}" LineBreakMode="TailTruncation">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding IsMissed}" Value="True">
+                                        <Setter Property="TextColor" Value="{StaticResource CallRed}" />
+                                        <Setter Property="FontAttributes" Value="Bold" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <HorizontalStackLayout Spacing="6">
+                                <Label Text="{Binding DirectionGlyph}" Style="{StaticResource Secondary}" />
+                                <Label Text="{Binding Subtitle}" Style="{StaticResource Secondary}" LineBreakMode="TailTruncation" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="2" VerticalOptions="Center" HorizontalOptions="End" Spacing="2">
+                            <Label Text="{Binding TimeLabel}" Style="{StaticResource Secondary}" HorizontalOptions="End" />
+                            <HorizontalStackLayout Spacing="4" HorizontalOptions="End">
+                                <Label Text="{Binding NetworkLabel}" FontSize="11" Style="{StaticResource Secondary}" />
+                                <Label Text="●" FontSize="11" TextColor="{Binding LineColor, Converter={StaticResource HexColor}}" />
+                                <Label Text="{Binding LineLabel}" FontSize="11" Style="{StaticResource Secondary}" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                        <Button Grid.Column="3" Text="📞" FontSize="18" Clicked="OnCallClicked"
+                                BackgroundColor="Transparent" WidthRequest="44" HeightRequest="44" Padding="0"
+                                SemanticProperties.Description="Call back" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Grid.Row="2" Text="⌨  Keypad" Clicked="OnKeypadClicked" Style="{StaticResource Filled}"
+                HorizontalOptions="End" VerticalOptions="End" Margin="0,0,0,16" Padding="20,0" />
+    </Grid>
+</ContentPage>
