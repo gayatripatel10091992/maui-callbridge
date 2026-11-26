@@ -63,7 +63,8 @@
                             </HorizontalStackLayout>
                         </VerticalStackLayout>
                         <Button Grid.Column="3" Text="📞" FontSize="18" Clicked="OnCallClicked"
-                                BackgroundColor="Transparent" WidthRequest="44" HeightRequest="44" Padding="0"
+                                BackgroundColor="Transparent" BorderWidth="0" BorderColor="Transparent"
+                                WidthRequest="44" HeightRequest="44" Padding="0"
                                 SemanticProperties.Description="Call back" />
                     </Grid>
                 </DataTemplate>

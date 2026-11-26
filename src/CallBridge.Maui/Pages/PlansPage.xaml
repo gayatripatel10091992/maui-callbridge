@@ -5,6 +5,7 @@
              xmlns:vm="clr-namespace:CallBridge.Core.ViewModels;assembly=CallBridge.Core"
              x:Class="CallBridge.Maui.Pages.PlansPage"
              x:DataType="vm:PlansViewModel"
+             Shell.TabBarIsVisible="False"
              Title="Plans">
 
     <CollectionView ItemsSource="{Binding Cards}" SelectionMode="None" Margin="16,0">

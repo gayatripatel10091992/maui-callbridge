@@ -26,7 +26,7 @@ Write-Host "Display: $([System.Windows.Forms.SystemInformation]::PrimaryMonitorS
 function Capture([string]$File, [string[]]$AppArgs, [int]$Wait = 8) {
     Get-Process -Name "CallBridge.Maui" -ErrorAction SilentlyContinue | Stop-Process -Force
     Start-Sleep -Seconds 1
-    $process = Start-Process -FilePath $Exe -ArgumentList ($AppArgs + @("--size", "440x720")) -PassThru
+    $process = Start-Process -FilePath $Exe -ArgumentList ($AppArgs + @("--size", "600x720")) -PassThru
     $handle = [IntPtr]::Zero
     for ($i = 0; $i -lt 90 -and $handle -eq [IntPtr]::Zero; $i++) {
         Start-Sleep -Seconds 1
