@@ -21,6 +21,8 @@
 
     <!-- Unpackaged Windows app: runs as a plain .exe, no MSIX needed. -->
     <WindowsPackageType>None</WindowsPackageType>
+    <!-- Ship the Windows App SDK runtime with the app, so the .exe runs on a clean machine (and the CI runner). -->
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>

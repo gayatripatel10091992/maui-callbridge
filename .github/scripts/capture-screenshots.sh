@@ -5,7 +5,7 @@ set -euo pipefail
 
 APP_ID="$1"
 APK="$2"
-OUT="docs/screenshots"
+OUT="docs/screenshots/android"
 mkdir -p "$OUT"
 
 adb wait-for-device

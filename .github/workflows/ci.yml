@@ -84,27 +84,18 @@ jobs:
           name: callbridge-maui-android
           path: |
             artifacts/CallBridge.apk
-            docs/screenshots/*.png
+            docs/screenshots/android/*.png
 
       - name: Commit updated screenshots
         if: github.event_name != 'pull_request'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/screenshots
-          if git diff --cached --quiet; then
-            echo "Screenshots unchanged"
-          else
-            git commit -m "docs: update screenshots [skip ci]"
-            git pull --rebase
-            git push
-          fi
+        shell: bash
+        run: bash .github/scripts/commit-screenshots.sh docs/screenshots/android "Android"
 
   windows:
-    name: Windows (WinUI) build
+    name: Windows (WinUI) build + screenshots
     needs: core-tests
     runs-on: windows-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -112,5 +103,52 @@ jobs:
           dotnet-version: 10.0.x
       - name: Install MAUI workload
         run: dotnet workload install maui
-      - name: Build Windows app
-        run: dotnet build src/CallBridge.Maui/CallBridge.Maui.csproj -f net10.0-windows10.0.19041.0 -c Release
+      - name: Publish unpackaged Windows app
+        run: >
+          dotnet publish src/CallBridge.Maui/CallBridge.Maui.csproj -f net10.0-windows10.0.19041.0 -c Release
+          -r win-x64 --self-contained -o artifacts/windows
+      - name: Run and capture screenshots
+        shell: pwsh
+        run: ./.github/scripts/capture-windows.ps1 -Exe "$PWD/artifacts/windows/CallBridge.Maui.exe"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: callbridge-maui-windows
+          path: docs/screenshots/windows/*.png
+      - name: Commit updated screenshots
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: bash .github/scripts/commit-screenshots.sh docs/screenshots/windows "Windows"
+
+  ios:
+    name: iOS simulator build + screenshots
+    needs: core-tests
+    runs-on: macos-26
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Select newest Xcode
+        run: |
+          XCODE=$(ls -d /Applications/Xcode_26*.app | sort -V | tail -n 1)
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+      - name: Install MAUI iOS workload
+        run: dotnet workload install maui-ios
+      - name: Build for iOS simulator
+        run: >
+          dotnet build src/CallBridge.Maui/CallBridge.Maui.csproj -f net10.0-ios -c Debug
+          -p:RuntimeIdentifier=iossimulator-arm64
+      - name: Run on simulator and capture screenshots
+        run: |
+          APP=$(find src/CallBridge.Maui/bin/Debug -name "*.app" -type d -path "*iossimulator-arm64*" -prune | head -n 1)
+          echo "App bundle: $APP"
+          bash .github/scripts/capture-ios.sh ${{ env.APP_ID }} "$APP"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: callbridge-maui-ios
+          path: docs/screenshots/ios/*.png
+      - name: Commit updated screenshots
+        if: github.event_name != 'pull_request'
+        run: bash .github/scripts/commit-screenshots.sh docs/screenshots/ios "iOS"

@@ -14,16 +14,18 @@ native Android versions.
 
 ## Screenshots
 
+### Android
+
 Captured by CI on a real Android emulator (API 34) from the release APK. Each screen is opened with a
 `callbridge://` deep link.
 
 | Calls | Messages | Voicemail | In call |
 |---|---|---|---|
-| ![Calls](docs/screenshots/01_calls.png) | ![Messages](docs/screenshots/02_messages.png) | ![Voicemail](docs/screenshots/03_voicemail.png) | ![In call](docs/screenshots/04_in_call.png) |
+| ![Calls](docs/screenshots/android/01_calls.png) | ![Messages](docs/screenshots/android/02_messages.png) | ![Voicemail](docs/screenshots/android/03_voicemail.png) | ![In call](docs/screenshots/android/04_in_call.png) |
 
 | Plans (from web signup) | Settings | Calls (dark) | In call (dark) |
 |---|---|---|---|
-| ![Plans](docs/screenshots/05_plans.png) | ![Settings](docs/screenshots/06_settings.png) | ![Dark](docs/screenshots/07_calls_dark.png) | ![In call dark](docs/screenshots/08_in_call_dark.png) |
+| ![Plans](docs/screenshots/android/05_plans.png) | ![Settings](docs/screenshots/android/06_settings.png) | ![Dark](docs/screenshots/android/07_calls_dark.png) | ![In call dark](docs/screenshots/android/08_in_call_dark.png) |
 
 ## Architecture
 
