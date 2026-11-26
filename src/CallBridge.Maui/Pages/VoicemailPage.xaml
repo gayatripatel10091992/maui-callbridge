@@ -21,7 +21,7 @@
                                     <Label Text="{Binding Initials}" Style="{StaticResource AvatarText}" />
                                 </Border>
                                 <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
-                                    <Label Text="{Binding Title}" Style="{StaticResource Primary}">
+                                    <Label Text="{Binding Title}" Style="{StaticResource Body}">
                                         <Label.Triggers>
                                             <DataTrigger TargetType="Label" Binding="{Binding IsNew}" Value="True">
                                                 <Setter Property="FontAttributes" Value="Bold" />
@@ -32,7 +32,7 @@
                                 </VerticalStackLayout>
                                 <Label Grid.Column="2" Text="{Binding LineLabel}" Style="{StaticResource Secondary}" VerticalOptions="Center" />
                             </Grid>
-                            <Label Text="{Binding Transcript}" Style="{StaticResource Primary}" FontSize="15">
+                            <Label Text="{Binding Transcript}" Style="{StaticResource Body}" FontSize="15">
                                 <Label.Triggers>
                                     <DataTrigger TargetType="Label" Binding="{Binding HasTranscript}" Value="False">
                                         <Setter Property="FontAttributes" Value="Italic" />

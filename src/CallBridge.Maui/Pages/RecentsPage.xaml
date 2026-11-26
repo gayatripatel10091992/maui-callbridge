@@ -41,7 +41,7 @@
                             <Label Text="{Binding Initials}" Style="{StaticResource AvatarText}" />
                         </Border>
                         <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="2">
-                            <Label Text="{Binding DisplayTitle}" Style="{StaticResource Primary}" LineBreakMode="TailTruncation">
+                            <Label Text="{Binding DisplayTitle}" Style="{StaticResource Body}" LineBreakMode="TailTruncation">
                                 <Label.Triggers>
                                     <DataTrigger TargetType="Label" Binding="{Binding IsMissed}" Value="True">
                                         <Setter Property="TextColor" Value="{StaticResource CallRed}" />

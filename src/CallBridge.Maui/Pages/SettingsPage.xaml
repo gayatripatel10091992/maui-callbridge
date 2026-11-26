@@ -27,7 +27,7 @@
             <CollectionView ItemsSource="{Binding NumberRows}" SelectionMode="None" HeightRequest="80">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="x:String">
-                        <Label Text="{Binding .}" Style="{StaticResource Primary}" Padding="0,8" />
+                        <Label Text="{Binding .}" Style="{StaticResource Body}" Padding="0,8" />
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
@@ -35,21 +35,21 @@
             <Label Text="Calling" Style="{StaticResource Section}" />
             <Grid ColumnDefinitions="*,Auto">
                 <VerticalStackLayout>
-                    <Label Text="Prefer Wi-Fi calling" Style="{StaticResource Primary}" />
+                    <Label Text="Prefer Wi-Fi calling" Style="{StaticResource Body}" />
                     <Label Text="Hands calls over to mobile data when Wi-Fi drops" Style="{StaticResource Secondary}" />
                 </VerticalStackLayout>
                 <Switch Grid.Column="1" IsToggled="{Binding WifiCallingPreferred}" />
             </Grid>
             <Grid ColumnDefinitions="*,Auto">
                 <VerticalStackLayout>
-                    <Label Text="Record calls" Style="{StaticResource Primary}" />
+                    <Label Text="Record calls" Style="{StaticResource Body}" />
                     <Label Text="Both sides hear an announcement first" Style="{StaticResource Secondary}" />
                 </VerticalStackLayout>
                 <Switch Grid.Column="1" IsToggled="{Binding RecordCalls}" />
             </Grid>
             <Grid ColumnDefinitions="*,Auto">
                 <VerticalStackLayout>
-                    <Label Text="Forward calls" Style="{StaticResource Primary}" />
+                    <Label Text="Forward calls" Style="{StaticResource Body}" />
                     <Label Text="{Binding ForwardingText}" Style="{StaticResource Secondary}" />
                 </VerticalStackLayout>
                 <Switch Grid.Column="1" IsToggled="{Binding ForwardingEnabled}" />
@@ -58,14 +58,14 @@
             <Label Text="Spam &amp; blocking" Style="{StaticResource Section}" />
             <Grid ColumnDefinitions="*,Auto">
                 <VerticalStackLayout>
-                    <Label Text="Screen unknown callers" Style="{StaticResource Primary}" />
+                    <Label Text="Screen unknown callers" Style="{StaticResource Body}" />
                     <Label Text="Send numbers that aren't in your contacts to voicemail" Style="{StaticResource Secondary}" />
                 </VerticalStackLayout>
                 <Switch Grid.Column="1" IsToggled="{Binding ScreenUnknownCallers}" />
             </Grid>
-            <Label Text="Spam sensitivity" Style="{StaticResource Primary}" Margin="0,8,0,0" />
+            <Label Text="Spam sensitivity" Style="{StaticResource Body}" Margin="0,8,0,0" />
             <Label Text="{Binding SpamText}" Style="{StaticResource Secondary}" />
-            <Label Text="Blocked numbers" Style="{StaticResource Primary}" Margin="0,8,0,0" />
+            <Label Text="Blocked numbers" Style="{StaticResource Body}" Margin="0,8,0,0" />
             <Label Text="{Binding BlockedText}" Style="{StaticResource Secondary}" />
 
             <Label x:Name="PlatformLabel" Style="{StaticResource Secondary}" Margin="0,24,0,0" HorizontalOptions="Center" />
