@@ -29,7 +29,8 @@ public sealed record MessageThread(
     bool LastHasAttachment = false)
 {
     public bool IsGroup => Participants.Count > 1;
-    public string Title => string.Join(", ", Participants.Select(p => p.Name.Split(' ')[0]));
+    // First names for people; numbers without a saved name stay whole ("+1 (312) 555-0199", not "+1").
+    public string Title => string.Join(", ", Participants.Select(p => char.IsLetter(p.Name[0]) ? p.Name.Split(' ')[0] : p.Name));
 }
 
 public enum DeliveryStatus { Sending, Sent, Delivered, Failed }

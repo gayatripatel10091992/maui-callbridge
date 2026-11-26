@@ -259,6 +259,14 @@ public class ViewModelTests
         Assert.Equal(95, logged.DurationSeconds);
     }
 
+    [Fact]
+    public void ConversationTitlesUseFirstNamesButKeepUnsavedNumbersWhole()
+    {
+        var threads = SampleData.Threads(SampleData.FixedNow).ToDictionary(t => t.Id);
+        Assert.Equal("Daniel, Priya, Lucas", threads["t-launch"].Title);
+        Assert.Equal("+1 (312) 555-0199", threads["t-pharmacy"].Title);
+    }
+
     [Theory]
     [InlineData("4155550134")]
     [InlineData(" 14155550134")]
