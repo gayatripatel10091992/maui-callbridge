@@ -1,4 +1,4 @@
-"""Pick the newest .NET workload set whose iOS SDK matches an Xcode installed on this runner.
+"""Pick the newest .NET workload set whose iOS SDK an Xcode on this runner can build.
 
 The newest MAUI workload can require an Xcode that the hosted macOS image does not have yet. Workload sets pin
 every workload manifest, so an older set with a matching iOS manifest gives a consistent toolchain.
@@ -35,8 +35,11 @@ for version in sets:
         continue
     ios = versions[0]
     print(f"  {version}: iOS SDK {ios[0]}.{ios[1]}", file=sys.stderr)
-    if ios in xcodes:
-        print(version, xcodes[ios])
+    # The exact Xcode is not derivable from the SDK version (iOS 26.5 needs Xcode 26.6), so match the major version
+    # and start from the newest Xcode of it; the build step switches if the SDK asks for a different one.
+    same_major = sorted(v for v in xcodes if v[0] == ios[0])
+    if same_major:
+        print(version, xcodes[same_major[-1]])
         sys.exit(0)
 
 sys.exit("No workload set matches an installed Xcode")

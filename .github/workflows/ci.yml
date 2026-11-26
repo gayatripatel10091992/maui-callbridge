@@ -141,9 +141,21 @@ jobs:
           # The full maui workload: restore evaluates every target framework, even when building one.
           dotnet workload install maui --version "$WORKLOAD_SET"
       - name: Build for iOS simulator
-        run: >
-          dotnet build src/CallBridge.Maui/CallBridge.Maui.csproj -f net10.0-ios -c Debug
-          -p:RuntimeIdentifier=iossimulator-x64
+        run: |
+          build() {
+            dotnet build src/CallBridge.Maui/CallBridge.Maui.csproj -f net10.0-ios -c Debug \
+              -p:RuntimeIdentifier=iossimulator-x64 2>&1 | tee build.log
+            return "${PIPESTATUS[0]}"
+          }
+          if ! build; then
+            # The iOS SDK names the exact Xcode it needs; switch to it if the runner has it and build again.
+            WANT=$(grep -oE "requires Xcode [0-9.]+" build.log | head -n 1 | awk '{print $3}' | sed 's/\.$//')
+            XCODE=$(ls -d /Applications/Xcode_"$WANT"*.app 2>/dev/null | head -n 1)
+            [ -n "$WANT" ] && [ -n "$XCODE" ] || exit 1
+            echo "Switching to $XCODE"
+            sudo xcode-select -s "$XCODE"
+            build
+          fi
       - name: Run on simulator and capture screenshots
         run: |
           APP=$(find src/CallBridge.Maui/bin/Debug -name "*.app" -type d -path "*iossimulator-x64*" -prune | head -n 1)
