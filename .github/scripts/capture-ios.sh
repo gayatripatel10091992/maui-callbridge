@@ -3,6 +3,8 @@
 # Fails if CallBridge is not running after a link, so a screenshot of the home screen is never committed.
 set -euo pipefail
 
+python3 -c "import PIL" 2>/dev/null || python3 -m pip install --quiet --break-system-packages pillow
+
 APP_ID="$1"
 APP="$2"
 OUT="docs/screenshots/ios"
@@ -37,6 +39,9 @@ xcrun simctl terminate "$DEVICE" "$APP_ID" || true
 BINARY="$(basename "$APP")/$(basename "$APP" .app)"
 running() { pgrep -f "$BINARY" >/dev/null; }
 
+# Waits for the app to draw and settle (see settle.py), then saves the screenshot.
+settled_screenshot() { python3 .github/scripts/settle.py "$DEVICE" "$1"; }
+
 diagnose() {
   echo "--- crash reports"
   ls -t ~/Library/Logs/DiagnosticReports/ 2>/dev/null | head -5
@@ -54,13 +59,12 @@ capture() {
   sleep 1
   xcrun simctl openurl "$DEVICE" "$link"
   for _ in $(seq 1 30); do running && break; sleep 1; done
-  sleep "$wait"
-  if ! running; then
-    echo "::error::CallBridge is not running after opening $link; refusing to save $file"
+  sleep "$wait"   # screens with a timer (in call) need a moment before they settle
+  if ! running || ! settled_screenshot "$OUT/$file"; then
+    echo "::error::CallBridge is not running or did not settle after opening $link; refusing to save $file"
     diagnose
     exit 1
   fi
-  xcrun simctl io "$DEVICE" screenshot "$OUT/$file" >/dev/null
   echo "Saved $OUT/$file"
 }
 
