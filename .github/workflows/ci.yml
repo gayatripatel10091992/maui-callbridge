@@ -130,8 +130,9 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-      - name: Install MAUI iOS workload
-        run: dotnet workload install maui-ios
+      - name: Install MAUI workload
+        # The full set: restore evaluates every target framework (Android, iOS, Mac Catalyst) even when building one.
+        run: dotnet workload install maui
       - name: Build for iOS simulator
         run: |
           build() {
