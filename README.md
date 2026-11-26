@@ -14,18 +14,57 @@ native Android versions.
 
 ## Screenshots
 
-### Android
+One codebase, three platforms. CI builds each app on its own runner, opens every screen with the same
+`callbridge://` link and commits the screenshots:
 
-Captured by CI on a real Android emulator (API 34) from the release APK. Each screen is opened with a
-`callbridge://` deep link.
+- **Android**: release APK on an API 34 emulator (Ubuntu runner).
+- **iOS**: simulator build on an iPhone simulator (macOS runner), links opened with `simctl openurl`.
+- **Windows**: unpackaged WinUI app (Windows runner), links passed on the command line.
+
+| | Calls | In call | Plans |
+|---|---|---|---|
+| **Android** | <img src="docs/screenshots/android/01_calls.png" width="180"/> | <img src="docs/screenshots/android/04_in_call.png" width="180"/> | <img src="docs/screenshots/android/05_plans.png" width="180"/> |
+| **iOS** | <img src="docs/screenshots/ios/01_calls.png" width="180"/> | <img src="docs/screenshots/ios/04_in_call.png" width="180"/> | <img src="docs/screenshots/ios/05_plans.png" width="180"/> |
+| **Windows** | <img src="docs/screenshots/windows/01_calls.png" width="240"/> | <img src="docs/screenshots/windows/04_in_call.png" width="240"/> | <img src="docs/screenshots/windows/05_plans.png" width="240"/> |
+
+<details open>
+<summary><b>Android</b>: all screens</summary>
 
 | Calls | Messages | Voicemail | In call |
 |---|---|---|---|
-| ![Calls](docs/screenshots/android/01_calls.png) | ![Messages](docs/screenshots/android/02_messages.png) | ![Voicemail](docs/screenshots/android/03_voicemail.png) | ![In call](docs/screenshots/android/04_in_call.png) |
+| <img src="docs/screenshots/android/01_calls.png" width="180"/> | <img src="docs/screenshots/android/02_messages.png" width="180"/> | <img src="docs/screenshots/android/03_voicemail.png" width="180"/> | <img src="docs/screenshots/android/04_in_call.png" width="180"/> |
 
 | Plans (from web signup) | Settings | Calls (dark) | In call (dark) |
 |---|---|---|---|
-| ![Plans](docs/screenshots/android/05_plans.png) | ![Settings](docs/screenshots/android/06_settings.png) | ![Dark](docs/screenshots/android/07_calls_dark.png) | ![In call dark](docs/screenshots/android/08_in_call_dark.png) |
+| <img src="docs/screenshots/android/05_plans.png" width="180"/> | <img src="docs/screenshots/android/06_settings.png" width="180"/> | <img src="docs/screenshots/android/07_calls_dark.png" width="180"/> | <img src="docs/screenshots/android/08_in_call_dark.png" width="180"/> |
+
+</details>
+
+<details>
+<summary><b>iOS</b>: all screens</summary>
+
+| Calls | Messages | Voicemail | In call |
+|---|---|---|---|
+| <img src="docs/screenshots/ios/01_calls.png" width="180"/> | <img src="docs/screenshots/ios/02_messages.png" width="180"/> | <img src="docs/screenshots/ios/03_voicemail.png" width="180"/> | <img src="docs/screenshots/ios/04_in_call.png" width="180"/> |
+
+| Plans (from web signup) | Settings | Calls (dark) | In call (dark) |
+|---|---|---|---|
+| <img src="docs/screenshots/ios/05_plans.png" width="180"/> | <img src="docs/screenshots/ios/06_settings.png" width="180"/> | <img src="docs/screenshots/ios/07_calls_dark.png" width="180"/> | <img src="docs/screenshots/ios/08_in_call_dark.png" width="180"/> |
+
+</details>
+
+<details>
+<summary><b>Windows</b>: all screens</summary>
+
+| Calls | Messages | Voicemail | In call |
+|---|---|---|---|
+| <img src="docs/screenshots/windows/01_calls.png" width="200"/> | <img src="docs/screenshots/windows/02_messages.png" width="200"/> | <img src="docs/screenshots/windows/03_voicemail.png" width="200"/> | <img src="docs/screenshots/windows/04_in_call.png" width="200"/> |
+
+| Plans (from web signup) | Settings | Calls (dark) | In call (dark) |
+|---|---|---|---|
+| <img src="docs/screenshots/windows/05_plans.png" width="200"/> | <img src="docs/screenshots/windows/06_settings.png" width="200"/> | <img src="docs/screenshots/windows/07_calls_dark.png" width="200"/> | <img src="docs/screenshots/windows/08_in_call_dark.png" width="200"/> |
+
+</details>
 
 ## Architecture
 
@@ -65,9 +104,9 @@ graph LR
 | Job | Runner | What it does |
 |---|---|---|
 | Core + view model tests | Ubuntu | `dotnet test` (xUnit) |
-| Android | Ubuntu | Release APK, then installs it on an API 34 emulator and captures the screenshots above |
-| Windows | Windows | Builds the WinUI app (`net10.0-windows10.0.19041.0`, unpackaged) |
-| iOS (`ios.yml`, manual) | macOS | Builds for the iOS simulator |
+| Android | Ubuntu | Release APK, installed on an API 34 emulator; captures the Android screenshots |
+| iOS | macOS | Simulator build with a workload set matched to the runner's Xcode; captures the iOS screenshots |
+| Windows | Windows | Unpackaged WinUI app (`net10.0-windows10.0.19041.0`); captures the Windows screenshots |
 
 ## Build
 

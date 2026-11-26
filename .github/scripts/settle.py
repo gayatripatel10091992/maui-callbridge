@@ -3,14 +3,16 @@
 Launch animations and the first blank frame are rejected; small live changes (a call timer, a spinner) are fine.
 Usage: settle.py <device> <out.png>. Exits 1 if the screen never settles within ~60 s.
 """
+import os
 import subprocess
 import sys
+import tempfile
 import time
 
 from PIL import Image, ImageChops, ImageStat
 
 device, out = sys.argv[1], sys.argv[2]
-tmp = out + ".tmp.png"
+tmp = os.path.join(tempfile.gettempdir(), "settle-shot.png")  # outside the repo, so it is never committed
 
 
 def grab():

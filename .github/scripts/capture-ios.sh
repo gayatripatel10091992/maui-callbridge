@@ -50,15 +50,14 @@ diagnose() {
 }
 
 # $1 = file name, $2 = link, $3 = seconds to wait after opening.
-# Starts the app, then opens the link in it: simctl launch gives a pid to check, which a cold openurl does not.
+# Launches the app with the link as a launch argument (an openurl into a running app now shows a confirmation alert),
+# and checks the pid simctl launch returns.
 capture() {
   local file="$1" link="$2" wait="${3:-6}" out pid
   xcrun simctl terminate "$DEVICE" "$APP_ID" 2>/dev/null || true
   sleep 1
-  out=$(xcrun simctl launch "$DEVICE" "$APP_ID")
+  out=$(xcrun simctl launch "$DEVICE" "$APP_ID" -link "$link")
   pid=${out##*: }
-  sleep 4
-  xcrun simctl openurl "$DEVICE" "$link"
   sleep "$wait"   # screens with a timer (in call) need a moment before they settle
   if ! ps -p "$pid" >/dev/null 2>&1 || ! settled_screenshot "$OUT/$file"; then
     echo "::error::CallBridge ($out) is not running or did not settle after opening $link; refusing to save $file"
