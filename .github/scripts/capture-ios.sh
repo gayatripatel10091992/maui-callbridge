@@ -33,7 +33,9 @@ xcrun simctl launch "$DEVICE" "$APP_ID" >/dev/null
 sleep 20   # first launch on a fresh simulator is slow
 xcrun simctl terminate "$DEVICE" "$APP_ID" || true
 
-running() { xcrun simctl spawn "$DEVICE" launchctl list | grep -q "$APP_ID"; }
+# Simulator apps run as host processes, so the app binary shows up in the host process list.
+BINARY="$(basename "$APP")/$(basename "$APP" .app)"
+running() { pgrep -f "$BINARY" >/dev/null; }
 
 diagnose() {
   echo "--- crash reports"
@@ -47,10 +49,11 @@ diagnose() {
 
 # $1 = file name, $2 = link, $3 = seconds to wait after opening
 capture() {
-  local file="$1" link="$2" wait="${3:-6}"
+  local file="$1" link="$2" wait="${3:-8}"
   xcrun simctl terminate "$DEVICE" "$APP_ID" 2>/dev/null || true
   sleep 1
   xcrun simctl openurl "$DEVICE" "$link"
+  for _ in $(seq 1 30); do running && break; sleep 1; done
   sleep "$wait"
   if ! running; then
     echo "::error::CallBridge is not running after opening $link; refusing to save $file"
