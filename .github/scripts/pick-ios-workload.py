@@ -15,7 +15,8 @@ def run(*args: str) -> str:
 
 
 xcodes = {}
-for path in glob.glob("/Applications/Xcode_*.app"):
+# Shortest name first: the image also has "Xcode_26.6.0.app" aliases, which xcodebuild can't resolve SDKs through.
+for path in sorted(glob.glob("/Applications/Xcode_*.app"), key=len):
     m = re.match(r"/Applications/Xcode_(\d+)\.(\d+)(?:\.\d+)?\.app$", path)
     if m:
         xcodes.setdefault((int(m.group(1)), int(m.group(2))), path)
