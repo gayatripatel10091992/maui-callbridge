@@ -27,10 +27,13 @@ print("Workload sets:", sets, file=sys.stderr)
 
 for version in sets:
     detail = run("dotnet", "workload", "search", "version", version)
-    m = re.search(r"microsoft\.net\.sdk\.ios\D*?(\d+)\.(\d+)\.\d+", detail, re.IGNORECASE)
-    if not m:
+    line = next((l for l in detail.splitlines() if "microsoft.net.sdk.ios" in l.lower()), "")
+    # The line also holds the SDK feature band (10.0.x); the iOS manifest version is the one with an iOS-sized major.
+    versions = [(int(a), int(b)) for a, b in re.findall(r"(\d+)\.(\d+)\.\d+", line) if int(a) >= 15]
+    if not versions:
+        print(f"  {version}: no iOS manifest in: {line.strip()!r}", file=sys.stderr)
         continue
-    ios = (int(m.group(1)), int(m.group(2)))
+    ios = versions[0]
     print(f"  {version}: iOS SDK {ios[0]}.{ios[1]}", file=sys.stderr)
     if ios in xcodes:
         print(version, xcodes[ios])
