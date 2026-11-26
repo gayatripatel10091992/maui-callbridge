@@ -60,9 +60,9 @@ public partial class InCallViewModel : ObservableObject
     {
         // Accept anything dialable ("4155550134", "1 415 555 0134", "+14155550134") and work with E.164 from here on.
         _number = PhoneNumbers.ToE164(number) ?? number.Trim();
-        _contact = _backend.ContactFor(number)?.Name;
+        _contact = _backend.ContactFor(_number)?.Name;
         _state = new CallState.Idle();
-        Dispatch(new CallEvent.Dial(number, network));
+        Dispatch(new CallEvent.Dial(_number, network));
     }
 
     public void Dispatch(CallEvent e)
