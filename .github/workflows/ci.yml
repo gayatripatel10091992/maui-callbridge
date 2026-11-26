@@ -122,27 +122,35 @@ jobs:
   ios:
     name: iOS simulator build + screenshots
     needs: core-tests
-    runs-on: macos-26
+    # Intel runner: hosted macOS arm64 capacity has been too short to pick these jobs up.
+    runs-on: macos-26-intel
     timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-      - name: Select newest Xcode
-        run: |
-          XCODE=$(ls -d /Applications/Xcode_26*.app | sort -V | tail -n 1)
-          sudo xcode-select -s "$XCODE"
-          xcodebuild -version
       - name: Install MAUI iOS workload
         run: dotnet workload install maui-ios
       - name: Build for iOS simulator
-        run: >
-          dotnet build src/CallBridge.Maui/CallBridge.Maui.csproj -f net10.0-ios -c Debug
-          -p:RuntimeIdentifier=iossimulator-arm64
+        run: |
+          build() {
+            dotnet build src/CallBridge.Maui/CallBridge.Maui.csproj -f net10.0-ios -c Debug \
+              -p:RuntimeIdentifier=iossimulator-x64 2>&1 | tee build.log
+            return "${PIPESTATUS[0]}"
+          }
+          xcodebuild -version
+          if ! build; then
+            # The iOS workload pins one Xcode version; switch to it if the runner's default differs, then retry.
+            WANT=$(grep -oE "requires Xcode [0-9.]+" build.log | head -n 1 | awk '{print $3}' | sed 's/\.$//')
+            [ -n "$WANT" ] && [ -d "/Applications/Xcode_$WANT.app" ] || exit 1
+            echo "Switching to Xcode $WANT"
+            sudo xcode-select -s "/Applications/Xcode_$WANT.app"
+            build
+          fi
       - name: Run on simulator and capture screenshots
         run: |
-          APP=$(find src/CallBridge.Maui/bin/Debug -name "*.app" -type d -path "*iossimulator-arm64*" -prune | head -n 1)
+          APP=$(find src/CallBridge.Maui/bin/Debug -name "*.app" -type d -path "*iossimulator-x64*" -prune | head -n 1)
           echo "App bundle: $APP"
           bash .github/scripts/capture-ios.sh ${{ env.APP_ID }} "$APP"
       - uses: actions/upload-artifact@v4
