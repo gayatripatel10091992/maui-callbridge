@@ -7,8 +7,7 @@ namespace CallBridge.Maui.Pages;
 /// Hosts one call. Feeds the view model a one-second tick and real connectivity changes (Wi-Fi ↔ cellular)
 /// from MAUI Essentials, so the shared state machine performs the handover logic on every platform.
 /// </summary>
-[QueryProperty(nameof(Number), "number")]
-public partial class InCallPage : ContentPage
+public partial class InCallPage : ContentPage, IQueryAttributable
 {
     private readonly InCallViewModel _viewModel;
     private IDispatcherTimer? _timer;
@@ -21,6 +20,12 @@ public partial class InCallPage : ContentPage
     }
 
     public string Number { get; set; } = "";
+
+    // IQueryAttributable hands over the raw object. [QueryProperty] URL-decodes strings, which turns the "+" of an E.164 number into a space.
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        if (query.TryGetValue("number", out var value) && value is string number) Number = number;
+    }
 
     protected override void OnAppearing()
     {

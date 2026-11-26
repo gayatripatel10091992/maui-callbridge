@@ -259,6 +259,17 @@ public class ViewModelTests
         Assert.Equal(95, logged.DurationSeconds);
     }
 
+    [Theory]
+    [InlineData("4155550134")]
+    [InlineData(" 14155550134")]
+    [InlineData("+1 (415) 555-0134")]
+    public void InCallMatchesTheContactForAnyDialableSpelling(string number)
+    {
+        var vm = new ViewModels.InCallViewModel(new CallBridgeBackend(() => SampleData.FixedNow));
+        vm.Start(number, CallNetwork.Wifi);
+        Assert.Equal("Maya Chen", vm.Ui.Title);
+    }
+
     [Fact]
     public void RecentsFilterSwitches()
     {
