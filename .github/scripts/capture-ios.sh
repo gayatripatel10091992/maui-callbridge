@@ -33,7 +33,17 @@ xcrun simctl launch "$DEVICE" "$APP_ID" >/dev/null
 sleep 20   # first launch on a fresh simulator is slow
 xcrun simctl terminate "$DEVICE" "$APP_ID" || true
 
-running() { xcrun simctl spawn "$DEVICE" launchctl list | grep -q "UIKitApplication:$APP_ID"; }
+running() { xcrun simctl spawn "$DEVICE" launchctl list | grep -q "$APP_ID"; }
+
+diagnose() {
+  echo "--- crash reports"
+  ls -t ~/Library/Logs/DiagnosticReports/ 2>/dev/null | head -5
+  latest=$(ls -t ~/Library/Logs/DiagnosticReports/*CallBridge* 2>/dev/null | head -n 1 || true)
+  [ -n "$latest" ] && head -c 6000 "$latest"
+  echo "--- app log"
+  xcrun simctl spawn "$DEVICE" log show --last 2m --style compact --predicate 'process CONTAINS "CallBridge"' 2>/dev/null | tail -60 || true
+  mkdir -p debug && xcrun simctl io "$DEVICE" screenshot debug/failure.png >/dev/null || true
+}
 
 # $1 = file name, $2 = link, $3 = seconds to wait after opening
 capture() {
@@ -44,6 +54,7 @@ capture() {
   sleep "$wait"
   if ! running; then
     echo "::error::CallBridge is not running after opening $link; refusing to save $file"
+    diagnose
     exit 1
   fi
   xcrun simctl io "$DEVICE" screenshot "$OUT/$file" >/dev/null

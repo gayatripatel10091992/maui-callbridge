@@ -130,41 +130,32 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-      - name: Install MAUI workload
-        # The full set: restore evaluates every target framework (Android, iOS, Mac Catalyst) even when building one.
-        run: dotnet workload install maui
-      - name: Build for iOS simulator
+      - name: Install MAUI workload matching the runner's Xcode
+        # Each .NET iOS release needs one exact Xcode; the newest can be ahead of the hosted image.
         run: |
-          build() {
-            dotnet build src/CallBridge.Maui/CallBridge.Maui.csproj -f net10.0-ios -c Debug \
-              -p:RuntimeIdentifier=iossimulator-x64 ${EXTRA:-} 2>&1 | tee build.log
-            return "${PIPESTATUS[0]}"
-          }
+          read -r WORKLOAD_SET XCODE < <(python3 .github/scripts/pick-ios-workload.py)
+          [ -n "$WORKLOAD_SET" ] && [ -n "$XCODE" ] || exit 1
+          echo "Workload set $WORKLOAD_SET with $XCODE"
+          sudo xcode-select -s "$XCODE"
           xcodebuild -version
-          ls -d /Applications/Xcode*.app
-          if ! build; then
-            WANT=$(grep -oE "requires Xcode [0-9.]+" build.log | head -n 1 | awk '{print $3}' | sed 's/\.$//')
-            [ -n "$WANT" ] || exit 1
-            if [ -d "/Applications/Xcode_$WANT.app" ]; then
-              # The iOS workload pins one Xcode version: switch to it when the runner has it.
-              echo "Switching to Xcode $WANT"
-              sudo xcode-select -s "/Applications/Xcode_$WANT.app"
-            else
-              # The newest workload can be ahead of the runner image: try the image's newest Xcode with the check off.
-              echo "::warning::Xcode $WANT is not on this runner; building with $(xcodebuild -version | head -n 1) and the version check off"
-              EXTRA="-p:ValidateXcodeVersion=false"
-            fi
-            build
-          fi
+          # The full maui workload: restore evaluates every target framework, even when building one.
+          dotnet workload install maui --version "$WORKLOAD_SET"
+      - name: Build for iOS simulator
+        run: >
+          dotnet build src/CallBridge.Maui/CallBridge.Maui.csproj -f net10.0-ios -c Debug
+          -p:RuntimeIdentifier=iossimulator-x64
       - name: Run on simulator and capture screenshots
         run: |
           APP=$(find src/CallBridge.Maui/bin/Debug -name "*.app" -type d -path "*iossimulator-x64*" -prune | head -n 1)
           echo "App bundle: $APP"
           bash .github/scripts/capture-ios.sh ${{ env.APP_ID }} "$APP"
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: callbridge-maui-ios
-          path: docs/screenshots/ios/*.png
+          path: |
+            docs/screenshots/ios/*.png
+            debug/*.png
       - name: Commit updated screenshots
         if: github.event_name != 'pull_request'
         run: bash .github/scripts/commit-screenshots.sh docs/screenshots/ios "iOS"
