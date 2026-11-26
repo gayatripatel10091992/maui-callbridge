@@ -35,9 +35,6 @@ xcrun simctl launch "$DEVICE" "$APP_ID" >/dev/null
 sleep 20   # first launch on a fresh simulator is slow
 xcrun simctl terminate "$DEVICE" "$APP_ID" || true
 
-# Simulator apps run as host processes, so the app binary shows up in the host process list.
-BINARY="$(basename "$APP")/$(basename "$APP" .app)"
-running() { pgrep -f "$BINARY" >/dev/null; }
 
 # Waits for the app to draw and settle (see settle.py), then saves the screenshot.
 settled_screenshot() { python3 .github/scripts/settle.py "$DEVICE" "$1"; }
@@ -52,16 +49,20 @@ diagnose() {
   mkdir -p debug && xcrun simctl io "$DEVICE" screenshot debug/failure.png >/dev/null || true
 }
 
-# $1 = file name, $2 = link, $3 = seconds to wait after opening
+# $1 = file name, $2 = link, $3 = seconds to wait after opening.
+# Starts the app, then opens the link in it: simctl launch gives a pid to check, which a cold openurl does not.
 capture() {
-  local file="$1" link="$2" wait="${3:-8}"
+  local file="$1" link="$2" wait="${3:-6}" out pid
   xcrun simctl terminate "$DEVICE" "$APP_ID" 2>/dev/null || true
   sleep 1
+  out=$(xcrun simctl launch "$DEVICE" "$APP_ID")
+  pid=${out##*: }
+  sleep 4
   xcrun simctl openurl "$DEVICE" "$link"
-  for _ in $(seq 1 30); do running && break; sleep 1; done
   sleep "$wait"   # screens with a timer (in call) need a moment before they settle
-  if ! running || ! settled_screenshot "$OUT/$file"; then
-    echo "::error::CallBridge is not running or did not settle after opening $link; refusing to save $file"
+  if ! ps -p "$pid" >/dev/null 2>&1 || ! settled_screenshot "$OUT/$file"; then
+    echo "::error::CallBridge ($out) is not running or did not settle after opening $link; refusing to save $file"
+    ps aux | grep -i callbridge | grep -v grep || true
     diagnose
     exit 1
   fi
